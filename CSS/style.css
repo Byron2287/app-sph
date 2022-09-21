@@ -42,11 +42,11 @@ body {
 .form-body input {
     display: block;
     margin: auto;
-    height: 100px;
+    height: 40px;
     width: 75%;
     padding-left: 10px;
-    color: #fff;
-    border: 1px solid #263849;
+    color: #5da6e6;
+    border: 1px solid #315476;
     border-radius: 2px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     background-color: transparent;
