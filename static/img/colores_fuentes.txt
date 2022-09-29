@@ -1,0 +1,9 @@
+Colores:
+Gris: R:102, G:102, B:102
+Azul Principal: R:50, G:175, B:181
+Azul Secundario: R:1, G:144, B:200
+Azul Terciario: R:0, G:91, B:154
+
+Fuentes:
+Geometr706 BlkCn BT Black
+Monotype Corsiva
