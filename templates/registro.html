@@ -8,6 +8,16 @@
         <link rel="icon" type="image/x-icon" href="/static/img/logo.png">
     </head>
     <body>
+
+        <script>
+            let Mensaje = "{{ Mensaje }}";
+                if  (Mensaje == "Ok")  
+                {
+                    // document.write("Contraseña errada")
+                     alert("Registro Exitoso");
+                 
+                }
+        </script>
         <header class="header">
             <div class="container logo-nav-container">
                 <img src="/static/img/logo.png" width="180" height="70" alt="SHP Logo">
@@ -22,8 +32,8 @@
         
         <main class="main">
             <div class="container">
-                <h1>REGISTRAR USUARIO</h1>
-                <form action="" method="get">
+                <h4>REGISTRAR USUARIO</h4>
+                <form action="/Ingresando" method="POST">
                 <section class="form-register">
                     <input type="text" class="inputs" name="nombres" id="nombres" placeholder="Nombres">
                     <input type="text" class="inputs" name="apellidos" id="apellidos" placeholder="Apellidos">
@@ -31,26 +41,27 @@
                     <input type="number" class="inputs" name="edad" id="edad" placeholder="Edad">
                     <input type="email" class="inputs-complete" name="correo" id="correo" placeholder="Correo">
 
-                    <input type="number" class="inputs-complete" inputmode="numeric" maxlength="9999999999" name="celular" id="celular" placeholder="Número de Celular"> </br>
+                    <input type="text" class="inputs-complete" inputmode="numeric"  name="celular" id="celular" placeholder="Número de Celular"> </br>
                     <select class="gender" name="genero" id="genero">
                         <option value="select-gender">Género</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
-                        <option value="I">Prefiero no Decirlo</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Prefiero no Decirlo</option>
                     </select>
                     
                     <select class="state" name="estado" id="estado">
                         <option value="select-estado">Estado Civil</option>
-                        <option value="S">Soltero</option>
-                        <option value="C">Casado</option>
-                        <option value="U">Union Libre</option>
-                        <option value="CO">Comprometido</option>
+                        <option value="Soltero">Soltero</option>
+                        <option value="Casado">Casado</option>
+                        <option value="Union Libre">Union Libre</option>
+                        <option value="Comprometido">Comprometido</option>
                     </select> </br>
-                    <input type="nickname" class="inputs-complete" name="nombre-usuario" id="nombre_usuario" placeholder="Nombre de usuario">
-                    <input type="password" class="inputs-complete" name="contraseña" id="contraseña" placeholder="Crea tu Nueva Contraseña">
+                    <input type="nickname" class="inputs-complete" name="Alias"  placeholder="Nombre Perfil">
+                    <input type="password" class="inputs-complete" name="contraseña"  placeholder="Crea tu Nueva Contraseña">
 
                     <p> <input type="checkbox" name="aggree" id="Politica"> <label for="Politica"> Acepto la Politica de Privacidad de Datos</label>
-                        <br><br> <button class="bottom"> Registrarme</button>
+                        <br><br> <input type="submit" class="bottom" value="Registrarme">  
+                        
                         
                     </p>
 

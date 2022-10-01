@@ -12,11 +12,16 @@
 </head>
 <body>
     <script>
-        let pruebas = "{{ contraerrada }}";
-            if  (pruebas == "True")  
+        let validacion = "{{ contraerrada }}";
+            if  (validacion == "errada")  
             {
                 // document.write("Contraseña errada")
                  alert("Contraseña errada");
+            }
+            else if (validacion == "NoExiste") 
+            {
+                // document.write("Contraseña errada")
+                 alert("Usuario no existe");
             }
     </script>
     <div class="navbar">
