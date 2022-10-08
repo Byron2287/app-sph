@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ES">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <title>SPH</title>  
+    <link rel="icon" type="/static/img/png" href="/static/img/logo.png">
+    <link rel="stylesheet" href="/static/style.css">
+    
+    
+</head>
+<body>
+    <script>
+        let validacion = "{{ contraerrada }}";
+            if  (validacion == "errada")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Contraseña errada");
+            }
+            else if (validacion == "NoExiste") 
+            {
+                // document.write("Contraseña errada")
+                 alert("Usuario no existe");
+            }
+            else if (validacion == "Bloqueado") 
+            {
+                // document.write("Contraseña errada")
+                 alert("Usuario Bloqueado...Comuniquese con el Administardor");
+            }
+
+    </script>
+    <div class="navbar">
+        <img src="/static/img/logo.png" class="logo" alt="Main-Logo">        
+    </div>
+    <div class="form-body">
+        <img src="static/img/iniciosesion.png" alt="user-login">
+        <p class="text">Bienvenido</p>
+        <form action="/login" method="POST"class="login-form">
+            <input type="text" title="Email o nombre de Prueba" placeholder="Digita Email o nombre de usuario" name="txtUsuario" >
+            <input type="password" placeholder="Contrasena" name="txtPassword">
+            <!-- <button>Iniciar Sesion</button> -->
+            <input type="submit" value="Iniciar Sesion">
+        </form>
+        <form action="/Registro" method="post">
+            <button>Registrarse </button>
+        </form>                       
+
+    </div>
+</body>
+</html> 

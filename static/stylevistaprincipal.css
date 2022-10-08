@@ -1,0 +1,284 @@
+* {
+    padding: 0;
+    margin: 0;
+    outline: none;
+    box-sizing: border-box;
+        
+}
+
+body{
+    background: linear-gradient(91.9deg, rgb(93, 248, 219) 27.8%, rgb(33, 228, 246) 67%);
+    
+}
+
+#sidebar {
+    position: fixed;
+    width: 200px;
+    height: 100%;
+    background-color: #263849;
+}
+
+#sidebar ul li  {
+    color: #fff;
+    text-align: center;
+    padding: 15px 10px;
+    list-style: none;
+    border-bottom: 1px solid rgba(100, 100, 100, .3);
+}
+
+#sidebar a {
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    text-decoration: none;
+}
+
+.img-logo {
+    height: 80px;
+}
+
+nav {
+    background: #263849;
+    margin-left: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    padding: 0 100px;
+}
+
+
+.img-logo2{
+    padding-left: 40px;
+}
+
+.img-logo2 img{
+    height: 70px;
+    width: 45px;
+    border:#fff 1px solid;
+}
+
+nav .nav-items {
+    display: flex;
+    flex: 1;
+    list-style: none;
+    padding: 0 0 0 40px;
+}
+
+    .nav-Galery {
+    background:rgb(93, 248, 219);
+    display: flex;
+    flex: 1;
+    list-style: none;
+    margin-left: 200px;
+
+}
+.formsComents{
+    align-items: center;
+
+}
+textarea{
+    background: #263849;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.letra{
+    background: #263849;
+    color: #263849;;
+    font-family: Arial, Helvetica, sans-serif;
+    margin-left: 350px;   
+
+}
+.nav-comments {
+    background:rgb(93, 248, 219);
+    display: flex;
+    flex: 1;
+    list-style: none;
+    margin-left: 470px;
+
+}
+
+nav .nav-items li{
+    padding: 0 15px;
+}
+
+nav .nav-items li a {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+nav .nav-items li a:hover {
+    color: black;
+}
+nav .btnInfopersonal{
+
+}
+
+nav form{
+    display: flex;
+    height: 40px;
+    border-radius: 2px;
+    padding: 2px;
+    background: #263849;
+    min-width: 18%!important;
+    border: 1px solid rgba(155, 155, 155,0.2);
+}
+
+nav form .search-data{
+    height: 100%;
+    width: 100%;
+    padding: 0 10px;
+    color: #fff;
+    font-weight: 500;
+    background: none;
+    border: none;
+    font-size: 17px;
+}
+
+nav form button {
+    padding: 0 15px;
+    background: black;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    color:blue;
+    border-radius: 2px;
+}
+.Busqueda{
+    background:#263849;
+    color: #fff;
+}
+.Busqueda button{
+    background:#fff;   
+}
+
+
+/* Style buttons */
+.btn {
+    background-color:transparent; /* Blue background */
+    border: none; /* Remove borders */
+    color: #263849; /* White text */
+    padding: 5px 5px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+
+  }
+.eliminar{
+    text-align:right; 
+    align-items: flex-end;  
+}
+  
+  /* Darker background on mouse-over */
+  .btn:hover {
+    background-color: aliceblue;
+    
+  }
+
+  .navinf {
+    background: #263849;
+    margin-left: 200px;
+    margin-top: 510px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: 90px;
+    padding: 0 100px;
+    position: fixed;
+    width: 1500px;
+    background-color: #263849;
+}
+
+.campotexto{
+    width: 850px;
+    height: 50px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    background: linear-gradient(91.9deg, rgb(93, 248, 219) 27.8%, rgb(33, 228, 246) 67%);
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #263849;
+    margin:-0px;
+    padding: 10px;
+    /* border: 1px solid #888; */
+    width: 90%;
+  }
+  
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+         }
+.file-select {
+    position: relative;
+    display: inline-block;
+}
+
+.file-select::before {
+    background-color: #263849;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    content: 'Seleccionar'; /* testo por defecto */
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.file-select input[type="file"] {
+    opacity: 0;
+    width: 200px;
+    height: 32px;
+    display: inline-block;
+}
+
+#src-file1::before {
+    content: 'Agregar Imagenes';
+}
+  
+ 
+
+
+
+.file-select {
+    position: relative;
+    display: inline-block;
+}
+
+.file-select::before {
+    background-color: #263849;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    content: 'Seleccionar'; /* testo por defecto */
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.file-select input[type="file"] {
+    opacity: 0;
+    width: 200px;
+    height: 32px;
+    display: inline-block;
+}
+
+#src-file1::before {
+    content: 'Agregar Imagenes';
+}
+
