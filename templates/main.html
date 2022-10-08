@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="ES">
 
+
+
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,32 +18,46 @@
 </head>
 
 <body>
-    
-    <div id="sidebar">
-        <div class="toggle-btn">
-            <span>&#9776;</span>
-        </div>
-        <ul>
-            <li>
-                <img class="img-logo" src="/static/img/logo.png" alt="">
-            </li>
-            <!-- aca se crean las condicionales del perfil -->
-                       
-            <li><a href="#">Agregar Imagenes</a></li>
-            <li><a href="#">Información personal</a></li>
-            <li><a href="#">Cerrar Sesión</a></li>
-            <li><a href="#">Bloquear Usuario</a></li>
-            <li><a href="#">Administrar Perfiles</a></li>
+    <form action="/GuardarImagen" method="POST" enctype="multipart/form-data">
+        <div id="sidebar">
+            <div class="toggle-btn">
+                <span>&#9776;</span>
+            </div>
+              <ul>
+                <li>
+                    <img class="img-logo" src="/static/img/logo.png" alt="">
+                </li>
+                <li>
+                    <div class="file-select" id="src-file1">
+                        <input type="file" name="Avatar2" aria-label="Archivo">
+                    </div>
+                    <input type="submit" value="Cargar" name="update-profile" class="btn" style="background-color:#fff;">
 
-        </ul>
-    </div>
+               </li> 
+
+                        
+                <!-- <li><a href="">Agregar Imagenes</a></li> -->
+                <li><a href="/infoPersonal">Información personal</a></li>
+                <li><a href="/logout">Cerrar Sesión</a></li>
+
+                {%if session["Perfil"] == "Administrador" %}
+                <!-- <li><a href="#">Bloquear Usuario</a></li> -->
+                <!-- <li><a href="#">Administrar Perfiles</a></li> -->
+                {% endif %}
+
+
+
+               </ul>
+            </div>
+       </form>
     <nav>
-        <div class="img-logo2"><img src="/static/img/{{ Carpeta }}/perfil/Default.png" alt="logo"></div>
+        <!-- session['Carpeta'] -->
+        <div class="img-logo2"><img src="/static/img/{{ session['Usuario'] }}/perfil/Default.png" alt="logo"></div>
         <div class="nav-items">
-            <li><a href="#">{{ usuario }}</a></li>
+            <li><a href="/infoPersonal">{{ session["Alias"]}}</a></li>
         </div>
-        <form action="#" class="Busqueda">
-            <input type="search" class="search-data" placeholder="Buscar" required title="Busqueda de Uusarios">
+        <form action="/Busqueda" method ="POST" class="Busqueda">
+            <input type="search" class="search-data" name="CampoBusqueda" placeholder="Buscar" required title="Busqueda de Usuarios">
             <button type="submit" class="fas fa-search"></button>
 
         </form>
@@ -56,11 +73,18 @@
         <div class="Galeria">
             <div class="slideshow-container">
 
+                {% for e in Imagenes %}
                 <div class="mySlides fade">
-                    <div class="numbertext">1 / {{Cantidad}}</div>
-                    <img src="static/img/{{ Carpeta }}/{{Imagen1}}" style="width:95%;height: 200px;max-width: 100%;max-height: 200px;">
+                    <div class="numbertext" data-comentario="{{e['Comentarios']}}">
+                        {{loop.index}}/ {{Imagenes|length}}
+                    </div>
+                    <img src="static/img/{{ session['Usuario'] }}/{{e['NombreImagen']}}"
+                        style="width:95%;height: 200px;max-width: 100%;max-height: 200px;">
                     <!-- <div class="text"><input type="button" value="Eliminar"></div> -->
                 </div>
+                        
+                {% endfor %}
+                
 
                 <a class="prev" onclick="plusSlides(-1)">❮</a>
                 <a class="next" onclick="plusSlides(1)">❯</a>
@@ -83,61 +107,164 @@
             </div>
         </div>
 
-        <script>
-            let slideIndex = 1;
-            showSlides(slideIndex);
-
-            function plusSlides(n) {
-                showSlides(slideIndex += n);
-            }
-
-            function currentSlide(n) {
-                showSlides(slideIndex = n);
-            }
-
-            function showSlides(n) {
-                let i;
-                let slides = document.getElementsByClassName("mySlides");
-                let dots = document.getElementsByClassName("dot");
-                if (n > slides.length) { slideIndex = 1 }
-                if (n < 1) { slideIndex = slides.length }
-                for (i = 0; i < slides.length; i++) {
-                    slides[i].style.display = "none";
-                }
-                for (i = 0; i < dots.length; i++) {
-                    dots[i].className = dots[i].className.replace(" active", "");
-                }
-                slides[slideIndex - 1].style.display = "block";
-                dots[slideIndex - 1].className += " active";
-            }
-        </script>
 
     </div>
 
 
-    <!-- <div class="nav-comments"> 
-        <div class="card" style="width: 18rem;">
-            <img src="img/AVENGERS.png" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Escriba aqui su comentario.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-        </div>
-    </div>-->
 
-
-    <strong><p class="nav-comments letra">Comentarios</p></strong>
+    <form action="/Comentar" method="post" class="formsComents">
+    <strong><p class="nav-comments letra">Ver Comentarios</p></strong>
+    </form>
    
     <div class="nav-comments">
-        <form class="formsComents">
-            <textarea name="comment" rows=10 cols=60>                          
+        
+            
+            <textarea name="comment" rows=10 cols=60 id="comentario">
+                
+
             </textarea>
-            <button class="btn"><i class="fa fa-trash"></i></button>
-            <button  class="btn"><i class="fa fa-comment" title="Comentar"></i></button>
-             
-        </form>
+           
+            <button  class="btn"><i class="fa fa-trash"title="Borrar"></i></button>
+            <button  class="myBtn"><i class="fa fa-comment" title="Comentar"></i></button>
+            
+            <div id="myModal" class="modal">
+
+                <!-- Modal content -->
+                <div class="modal-content">
+                  <span class="close"> &times;</span>
+                  <input class="campotexto" ariaMultiLine="True" type="text"  width="400px" >
+                  <button id="myBtn">Enviar</button>
+                </div>
+              
+              </div>
+        
     </div>
+
+
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            let dots = document.getElementsByClassName("dot");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+            TraerComentario()
+        }
+        function TraerComentario() {
+
+            for (n of document.querySelectorAll(".mySlides.fade")) {
+                if (n.style.display == "block") {
+                    if (n.querySelector("div").getAttribute("data-comentario")!='None')
+                        document.getElementById("comentario").innerHTML= n.querySelector("div").getAttribute("data-comentario");
+                    else
+                      document.getElementById("comentario").innerHTML="";  
+                }
+            }
+
+        }
+
+    </script>
+<style>
+    body {font-family: Arial, Helvetica, sans-serif;}
+    
+    /* The Modal (background) */
+    .modal {
+      display: none; /* Hidden by default */
+      position:absolute ; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      padding-top: 5px; /* Location of the box */
+      bottom: 0;
+      right: 0;
+      width: 33%; /* Full width */
+      height: 12%; /* Full height */
+      overflow:-moz-hidden-unscrollable ; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    
+    /* Modal Content */
+    .modal-content {
+      background-color: #fefefe;
+      margin: auto;
+      padding: 10px;
+      border: 1px solid #888;
+      width: 90%;
+      height: fit-content;
+    }
+    
+    /* The Close Button */
+    .close {
+      color: #aaaaaa;
+      float: center;
+      font-size: 28px;
+      font-weight: bold;
+    
+    }
+    
+    .close:hover,
+    .close:focus {
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .campotexto{
+        width: 70%;
+        height: 40px;
+        padding-top: 0px;
+        padding-right: 0px;
+        padding-left: 0px;
+        padding-bottom: 0px;
+    }
+    
+    </style>
+    
+    <script>
+        // Get the modal
+    var modal = document.getElementById("myModal");
+    //document.getElementById("Coment")
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks the button, open the modal 
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "block";
+      }
+    }
+    
+    </script>
 
 
 

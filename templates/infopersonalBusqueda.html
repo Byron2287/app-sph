@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ES">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/infopersonalstyle.css">
+    <title>Informacion personal</title>
+</head>
+<body>
+    <div id="sidebar">
+        <div class="toggle-btn">
+            <span>&#9776;</span>
+        </div>
+        <ul>
+            <li>
+                <img class="img-logo" src="/static/img/logo.png" alt="logodos">
+            </li>
+            <li>
+                <div class="img-logo2">
+                   <a href="https://www.instagram.com" target="_blank">
+                       <img src="static/img/{{ session['Usuario']}}/perfil/Default.png" alt="logo" title="Regresar">
+                   </a>
+               </div>
+           </li>
+
+            <li><a href="/main">Inicio</a></li>
+            <li><a href="/BusquedaOk">Regresar</a></li>
+        </ul>
+    </div>
+    <nav>
+        <div class="img-logo2"><img src="/static/img/{{ session['emailBuscado'] }}/perfil/Default.png" alt="logo"></div>
+        <div class="nav-items"><li><a href="#">{{session["usuarioBuscado"]}}</a></li></div>
+        <form action="#">
+        </form>
+    </nav>
+    <div class="info-personal">
+        <form action="/infoPersonal/actualizar" method="POST" enctype="multipart/form-data">
+        <img src="/static/img/{{ session['emailBuscado'] }}/perfil/Default.png" alt="iamgenperfil" class="img-perfil">
+        <div class="flex">
+            <div class="inputbox">
+                <span>Nombre :</span>
+                <input type="text" name="nombres" class="box" value="{{session['nombreperfil']}}">
+                <span>Usuario :</span>
+                <input type="text" name="alias" class="box" value="{{session['usuarioBuscado']}}">
+                <span>Correo :</span>
+                <input type="email" name="email" class="box" value="{{session['emailBuscado']}}">
+            </div>
+            <div class="inputbox">
+                <input type="hidden" name="old-name">
+                <span>Apellido :</span>
+                <input type="text" name="apellidos"  class="box" value="{{session['apellidoBuscado']}}">
+                <span>Genero :</span>
+                <input type="text" name="genero"  class="box" value="{{session['generoBuscado']}}">
+                <span>Edad :</span>
+                <input type="text" name="edad" value="{{session['edadBuscado']}}" class="box">
+                <span>Estado Civil :</span>
+                <input type="text" name="civil" value="{{session['EstCivilBuscado']}}" class="box">
+
+            </div>
+            <div class="inputbox">
+
+                
+            </div>
+        </div>
+        </form>
+
+    </div>
+    
+</body>
+</html>

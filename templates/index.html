@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="ES">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    <link rel="stylesheet" href="/static/style.css">
     <title>SPH</title>  
     <link rel="icon" type="/static/img/png" href="/static/img/logo.png">
+    <link rel="stylesheet" href="/static/style.css">
     
     
 </head>
@@ -23,6 +24,12 @@
                 // document.write("Contraseña errada")
                  alert("Usuario no existe");
             }
+            else if (validacion == "Bloqueado") 
+            {
+                // document.write("Contraseña errada")
+                 alert("Usuario Bloqueado...Comuniquese con el Administardor");
+            }
+
     </script>
     <div class="navbar">
         <img src="/static/img/logo.png" class="logo" alt="Main-Logo">        

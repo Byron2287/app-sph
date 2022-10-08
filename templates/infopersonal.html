@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ES">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/infopersonalstyle.css">
+    <title>Informacion personal</title>
+</head>
+<body>
+    <div id="sidebar">
+        <div class="toggle-btn">
+            <span>&#9776;</span>
+        </div>
+        <ul>
+            <li>
+                <img class="img-logo" src="/static/img/logo.png" alt="logodos">
+            </li>
+            <li><a href="/main">Regresar</a></li>
+        </ul>
+    </div>
+    <nav>
+        <div class="img-logo2"><img src="/static/img/{{ Carpeta }}/perfil/Default.png" alt="logo"></div>
+        <div class="nav-items"><li><a href="#">{{usuario}}</a></li></div>
+        <form action="#">
+        </form>
+    </nav>
+    <div class="info-personal">
+        <form action="/infoPersonal/actualizar" method="POST" enctype="multipart/form-data">
+        <img src="/static/img/{{ Carpeta }}/perfil/Default.png" alt="iamgenperfil" class="img-perfil">
+        <div class="flex">
+            <div class="inputbox">
+                <span>Nombre :</span>
+                <input type="text" name="nombres" class="box" value="{{nombreperfil}}">
+                <span>Usuario :</span>
+                <input type="text" name="alias" class="box" value="{{usuario}}">
+                <span>Correo :</span>
+                <input type="email" name="email" class="box" value="{{Carpeta}}">
+                <span>Actualizar imagen :</span>
+                <input type="file" name="txtAvatar"  class="box">  
+                <input type="submit" value="actualizar" name="update-profile" class="btn">
+                <a href="{{url_for('login')}}" methods ="POST" class="delete-btn">Ir Atras..</a>                              -->
+            </div>
+            <div class="inputbox">
+                <input type="hidden" name="old-name">
+                <span>Apellido :</span>
+                <input type="text" name="apellidos"  class="box" value="{{ apellido }}">
+                <span>Genero :</span>
+                <input type="text" name="genero"  class="box" value="{{genero}}">
+                <span>Edad :</span>
+                <input type="text" name="edad" value="{{edad}}" class="box">
+                <span>Estado Civil :</span>
+                <input type="text" name="civil" value="{{EstCivil}}" class="box">
+
+            </div>
+            <div class="inputbox">
+
+                
+            </div>
+        </div>
+        </form>
+
+    </div>
+    
+</body>
+</html>
