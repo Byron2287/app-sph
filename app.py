@@ -6,7 +6,7 @@ import tkinter.messagebox
 from flask import Flask, render_template, request,jsonify,redirect, url_for,session
 import json
 #importa libreria os
-from os import getcwd
+from os import getcwd, system
 import shutil
 from werkzeug.utils import secure_filename
 
@@ -371,7 +371,7 @@ def FotoCargar():
 
         foto2 = request.files["Avatar2"]
 
-        if  foto2  :
+        if  foto2:
             ruta=""
             pathFileImage=""
 
@@ -426,50 +426,47 @@ def BloquearUsuario():
 @app.route("/Mensaje")
 def EnviarMensaje():
 
-        HistoricoRemitente=""
-        HistoricoDestinatario=""
+    HistoricoRemitente=""
+    HistoricoDestinatario="" 
     #realiza consulta para traer info
-        with sqlite3.connect("BD/SPH.db") as con:
-
-            #Convierte el registro en un diccionario
-                        
-            con.row_factory = sqlite3.Row
-
-            # Crea un apuntador para manipular la BD
-            cur = con.cursor()
-            #carga consulta para traer la info del usuario                   
-            cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[email,nombreBuscado])
-            
-            row = cur.fetchone()
-            #Si hay datos
-            if row:
-                HistoricoRemitente=row["Conte_Msg"]
-            #carga la info del destinatario
-        with sqlite3.connect("BD/SPH.db") as con:
+    with sqlite3.connect("BD/SPH.db") as con:
 
             # Convierte el registro en un diccionario
                         
-            con.row_factory = sqlite3.Row
+        con.row_factory = sqlite3.Row
 
             # Crea un apuntador para manipular la BD
-            cur = con.cursor()
+        cur = con.cursor()
             #carga consulta para traer la info del usuario                   
-            cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[nombreBuscado,email])
+        cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[session["Usuario"],nombreBuscado])
             
-            row = cur.fetchone()
+        row = cur.fetchone()
             #Si hay datos
+        if row:
+           HistoricoRemitente=row["Conte_Msg"]
+            #carga la info del destinatario
+        with sqlite3.connect("BD/SPH.db") as con:
+            # Convierte el registro en un diccionario
+            con.row_factory = sqlite3.Row
+
+                # Crea un apuntador para manipular la BD
+            cur = con.cursor()
+                #carga consulta para traer la info del usuario                   
+            cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[nombreBuscado,session["Usuario"]])
+                
+            row = cur.fetchone()
+                #Si hay datos
             if row:
                 HistoricoDestinatario=row["Conte_Msg"]
-                #realiza un split para enviar la info
-                
+                    #realiza un split para enviar la info
                     
-            #carga los datos de remitente y destinatario
-        if(HistoricoRemitente!="" or HistoricoDestinatario!=""):
-            HistoricoMensajes=HistoricoRemitente+"<br>"+HistoricoDestinatario
-            separador = "<br>"
-            Historico = HistoricoMensajes.split(separador)
-            return render_template("message.html",Historico=Historico)
-        return render_template("message.html",Historico="")    
+                      
+                #carga los datos de remitente y destinatario
+        HistoricoMensajes=HistoricoRemitente+"<br>"+HistoricoDestinatario
+        separador = "<br>"
+        Historico = HistoricoMensajes.split(separador)
+        return render_template("message.html",Historico=Historico)
+    return "No hay datos"    
 
 
 
@@ -485,7 +482,7 @@ def MensajesPrivado():
         # Crea un apuntador para manipular la BD
         cur = con.cursor()
         #carga consulta para traer los mensajes privados del usuario                  
-        cur.execute("SELECT * FROM MensajesPrivados WHERE Remitente = ? AND Destinatario =?",[session["Usuario"],nombreBuscado])
+        cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[session['Usuario'],nombreBuscado])
         
         row = cur.fetchone()
         #Si hay datos
@@ -494,7 +491,7 @@ def MensajesPrivado():
            #captura la info y actualiza lo existente con lo nuevo
            Historico=row["Mensaje"]
         #concatena un br para que queden los espacios
-           EnviarMensaje=Historico+"<br>"+session["Usuario"]+"<br>"+EnviarMensaje
+           EnviarMensaje=Historico+"<br>"+session['Usuario']+"<br>"+EnviarMensaje
             #procede a realizar un insert de el mensaje enviado
            with sqlite3.connect("BD/SPH.db") as con:
 
@@ -525,15 +522,13 @@ def MensajesPrivado():
 
                 # Crea un apuntador para manipular la BD
                 cur = con.cursor()                   
-                cur.execute("INSERT INTO MensajesPrivados (Remitente,Destinatario,Mensaje)VALUES(?,?,?)",[session["Usuario"],nombreBuscado,EnviarMensaje])
+                cur.execute("INSERT INTO Mensajes (Remitente,Destinatario,Mensaje)VALUES(?,?,?)",[session["Usuario"],nombreBuscado,EnviarMensaje])
                 con.commit()
 
                 return redirect("/Mensaje")    
 
             
             return "No hay Datos"
-
-
 
 
 

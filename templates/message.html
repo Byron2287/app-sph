@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/stylevistaprincipal.css">
-    <link rel="stylesheet" href="static/styleGalery.css">
+    <link rel="stylesheet" href="../static/stylevistaprincipal.css">
+    <link rel="stylesheet" href="../static/styleGalery.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="icon" type="image/png" href="/static/img/logo.png">
+    <link rel="icon" type="image/png" href="../static/img/logo.png">
 
 
     <title>Message</title>
@@ -38,7 +38,7 @@
 <!-- estilo de escritura de mensajes -->
     <div class="navmensaje">
         <div class="modal-contentmensaje">
-            <textarea  class="campotextomensaje"name="comment" rows=10 cols=60 width="1000" >
+            <textarea  class="campotextomensaje" name="comment" rows=10 cols=60 width="1000" >
                 {% for e in Historico %} 
                 {{e}}               
                 {% endfor %}
