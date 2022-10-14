@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=D:\Documents\BYRON\PROGRAMACION MINTIC 2022\DESARROLLO DE SOFTWARE\SPRINTS\Proyecto 21-09-2022\Proyecto\venv
+set VIRTUAL_ENV=D:\Downloads\SPH12oct\SPH\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

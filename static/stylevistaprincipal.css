@@ -13,7 +13,7 @@ body{
 
 #sidebar {
     position: fixed;
-    width: 200px;
+    width: 210px;
     height: 100%;
     background-color: #263849;
 }
@@ -209,6 +209,33 @@ nav form button {
     width: 90%;
   }
   
+  .navmensaje {
+    background:linear-gradient(91.9deg, rgb(93, 248, 219) 27.8%, rgb(33, 228, 246) 67%);
+    margin-left: 200px;
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: 90px;
+    padding: 0 100px;
+    position: fixed;
+    width: 1500px;
+    background-color: #263849;
+}
+
+.campotextomensaje{
+    width: 850px;
+    height: 450px;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    background: linear-gradient(91.9deg, rgb(93, 248, 219) 27.8%, rgb(33, 228, 246) 67%);
+    text-align:start ;
+    
+}
+
+
   /* The Close Button */
   .close {
     color: #aaaaaa;
@@ -281,4 +308,28 @@ nav form button {
 #src-file1::before {
     content: 'Agregar Imagenes';
 }
+.btn1 {
+    
+    border: none; /* Remove borders */
+    color: #263849; /* White text */
+    padding: 5px 5px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+    background-color: #263849;
+    color: white;
+    margin-top: 5px;
+    margin-left: 75px;
+}
 
+.gender {
+    padding: 10px 10px;
+    width: 100%;
+    color: white;
+    background: #263849;  
+    font-size: 15px;
+    text-align: center;
+    border-left: none;
+    border-right: none;
+    
+    
+  }

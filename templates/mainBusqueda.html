@@ -9,11 +9,43 @@
     <link rel="stylesheet" href="static/styleGalery.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="icon" type="image/png" href="/static/img/logo.png">
-    <link rel="stylesheet" href="CSS/cajamodal.css">
+
+
     <title>MainBusqueda</title>
 </head>
-<script src="js/cajamodal.js"></script>
+
 <body>
+    <script>
+        let Mensaje = "{{ Mensaje }}";
+            if  (Mensaje == "Comentario eliminado exitosamente")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Comentario eliminado exitosamente...para ver los cambios ingrese nuevamente");
+                
+             
+            }
+            else if  (Mensaje == "Comentario Guardado con exito")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Comentario Guardado con exito... para ver los cambios ingrese nuevamente");
+                 let Mensaje=""
+                
+                
+            }
+
+        </script>
+
+
+    <script>
+        let Mensaje2 = "{{actualizado}}";
+            if  (Mensaje2 == "ok")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Perfil actualizado exitosamente");
+                 let Mensaje2 =""
+             
+            }
+        </script>
     <div id="sidebar">
         <div class="toggle-btn">
             <span>&#9776;</span>
@@ -32,7 +64,6 @@
             <li><a href="/main">Inicio</a></li>
             <li><a href="/infoPersonalBusqueda">Información Personal</a></li>
             <li><a href="/Mensaje">Enviar Mensajes</a></li>
-            
             <li><a href="/logout">Cerrar Sesión</a></li>
 
         </ul>
@@ -42,23 +73,41 @@
             <a href="/infoPersonalBusqueda">
                 <img src="static/img/{{session['nombreBuscado']}}/perfil/Default.png" alt="logo" title="Ver Informacion Personal">
             </a>
-            {{session['NombreBusqueda']}}
         </div>
         <div class="nav-items">
             <li><a href="/gotopersonal" title="Ver Información Personal">{{session["AliasBusqueda"]}} </a></li>
-            {%if session["Perfil"] == "Administrador" %}
-
-            <li><a href="/BloquearUsuario">Bloquear Usuario</a></li>
-            <!-- <li><a href="#">Administrar Perfil</a></li> -->
-            <select class="gender" name="genero" id="genero">
-                <option value="Administar Perfil">Administar Perfil</option>
-                <option value="Usuario">Usuario</option>
-                <option value="Administrador">Administrador</option>
-                <option value="SuperAdmin">SuperAdmin</option>
-            </select>
-
-            {% endif %}           
+                       
         </div>
+        {%if session["Perfil"] == "SuperAdmin" %}
+        <form action="/BloquearUsuario">
+          <input type="submit" value="Bloquear Usuario">
+        </form>
+        <!-- <li><a href="#">Administrar Perfil</a></li> -->
+
+    <form action="/CambiarPerfil" method="post">
+        <select class="gender" name="Perfil" id="Perfil">
+            <option value="Administar Perfil">Administar Perfil</option>
+            <option value="Usuario">Usuario</option>
+            <option value="Administrador">Administrador</option>
+            <option value="SuperAdmin">SuperAdmin</option>
+        </select>
+        <input type="submit" value="Cambiar" name="" class="btn1">           
+    </form>
+
+        {% endif %}
+        {%if session["Perfil"] == "Administrador" %}
+
+        <form action="/BloquearUsuario">
+            <input type="submit" value="Bloquear Usuario">
+          </form>
+  
+        <!-- <li><a href="#">Administrar Perfil</a></li> -->
+        <form action="/CambiarPerfil" method="post">
+    </form>
+
+        {% endif %}
+
+
     </nav>
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search"
         viewBox="0 0 16 16">
@@ -70,16 +119,17 @@
     <div class="nav-Galery">
         <div class="Galeria">
             <div class="slideshow-container">
-                {% for e in Imagenes %}
+                {% for e in Imagen1Busqueda %}                
+
+
                 <div class="mySlides fade">
-                    <div class="numbertext" data-comentario="{{e['Comentarios']}}">
-                        {{loop.index}}/ {{Imagenes|length}}
+                    <div class="numbertext" data-comentario="{{e['Comentarios']}}" data-nombre="{{e['NombreImagen']}}">
+                        {{loop.index}}/ {{Imagen1Busqueda|length}}  {{e['NombreImagen']}}
                     </div>
-                    <img src="static/img/{{ session['Usuario'] }}/{{e['NombreImagen']}}"
-                        style="width:95%;height: 200px;max-width: 100%;max-height: 200px;">
-                    <!-- <div class="text"><input type="button" value="Eliminar"></div> -->
+                       <img src="static/img/{{ session['EmailBusqueda'] }}/{{e['NombreImagen']}}" 
+                       style="width:95%;height: 200px;max-width: 100%;max-height: 200px;">
+
                 </div>
-                        
                 {% endfor %}
 
                 <a class="prev" onclick="plusSlides(-1)">❮</a>
@@ -94,6 +144,7 @@
                 <span class="dot" onclick="currentSlide(3)"></span>
             </div>
         </div>
+
         <script>
             let slideIndex = 1;
             showSlides(slideIndex);
@@ -120,7 +171,31 @@
                 }
                 slides[slideIndex - 1].style.display = "block";
                 dots[slideIndex - 1].className += " active";
+                TraerComentario()
+                TraerNombre()
             }
+
+            function TraerComentario() {
+
+                    for (n of document.querySelectorAll(".mySlides.fade")) {
+                        if (n.style.display == "block") {
+                            document.getElementById("comentario").innerHTML= n.querySelector("div").getAttribute("data-comentario")
+                        }
+                    }
+
+}
+
+function TraerNombre() {
+
+for (n of document.querySelectorAll(".mySlides.fade")) {
+    if (n.style.display == "block") {
+        document.getElementById("nombre").innerHTML= n.querySelector("div").getAttribute("data-nombre")
+    }
+}
+
+}
+
+
         </script>
 
     </div>
@@ -139,114 +214,123 @@
 
 
     <strong><p class="nav-comments letra">Comentarios</p></strong>
-    
- 
+   
     <div class="nav-comments">
-        
+        <form class="formsComents">
+            <textarea name="comment" rows=10 cols=60 id="comentario">
 
-        <textarea name="comment" rows=10 cols=60 id="comentario">
-                
+            </textarea>
 
-        </textarea>
-       
-        <button  class="btn"><i class="fa fa-trash"title="Borrar"></i></button>
+
+        </form>
         <button  id="myBtn"><i class="fa fa-comment" title="Comentar"></i></button>
-             
-             <div id="myModal" class="modal">
 
-                <!-- Modal content -->
-                <div class="modal-content">
-                  <span class="close"> &times;</span>
-                  <input class="campotexto" ariaMultiLine="True" type="text"  width="400px" >
-                  <button id="myBtn">Enviar</button>
-                </div>
-              
-              </div>
     </div>
+
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <form action="/EnviarComentarioBusqueda" method="POST">
+            
+        <div class="modal-content">
+            <textarea name="foto" rows=1 cols=1 id="nombre">
+                
+            </textarea>
+
+            <span class="close" >&times;</span>
+          <input class="campotexto" ariaMultiLine="True" type="text"  width="400px" name="Texto" >
+          <button type="submit" id="myBtn">Enviar </button>
+        </div>
+      
+      </div>
+    </form>
+
+
+
+    <style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        
+        /* The Modal (background) */
+        .modal {
+          display: none; /* Hidden by default */
+          position:absolute ; /* Stay in place */
+          z-index: 1; /* Sit on top */
+          padding-top: 5px; /* Location of the box */
+          bottom: 0;
+          right: 0;
+          width: 33%; /* Full width */
+          height: 12%; /* Full height */
+          overflow:-moz-hidden-unscrollable ; /* Enable scroll if needed */
+          background-color: rgb(0,0,0); /* Fallback color */
+          background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+        
+        /* Modal Content */
+        .modal-content {
+          background-color: #fefefe;
+          margin: auto;
+          padding: 10px;
+          border: 1px solid #888;
+          width: 90%;
+          height: fit-content;
+        }
+        
+        /* The Close Button */
+        .close {
+          color: #aaaaaa;
+          float: center;
+          font-size: 28px;
+          font-weight: bold;
+        
+        }
+        
+        .close:hover,
+        .close:focus {
+          color: #000;
+          text-decoration: none;
+          cursor: pointer;
+        }
+        .campotexto{
+            width: 70%;
+            height: 40px;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-left: 0px;
+            padding-bottom: 0px;
+        }
+        
+        </style>
+        
+        <script>
+            // Get the modal
+        var modal = document.getElementById("myModal");
+        //document.getElementById("Coment")
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+        
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+        
+        // When the user clicks the button, open the modal 
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+        
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+        
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "block";
+          }
+        }
+        
+        </script>
     
 
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-
-/* The Modal (background) */
-.modal {
-  display: none; /* Hidden by default */
-  position:absolute ; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 5px; /* Location of the box */
-  bottom: 0;
-  right: 0;
-  width: 33%; /* Full width */
-  height: 12%; /* Full height */
-  overflow:-moz-hidden-unscrollable ; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-  background-color: #fefefe;
-  margin: auto;
-  padding: 10px;
-  border: 1px solid #888;
-  width: 90%;
-  height: fit-content;
-}
-
-/* The Close Button */
-.close {
-  color: #aaaaaa;
-  float: center;
-  font-size: 28px;
-  font-weight: bold;
-
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-.campotexto{
-    width: 70%;
-    height: 40px;
-    padding-top: 0px;
-    padding-right: 0px;
-    padding-left: 0px;
-    padding-bottom: 0px;
-}
-
-</style>
-
-<script>
-    // Get the modal
-var modal = document.getElementById("myModal");
-//document.getElementById("Coment")
-// Get the button that opens the modal
-var btn = document.getElementById("myBtn");
-
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal 
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "block";
-  }
-}
-
-</script>
 </body>
 
 </html>

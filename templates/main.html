@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ES">
 
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,16 +10,52 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="icon" type="image/png" href="/static/img/logo.png">
 
+
     <title>Main</title>
 </head>
 
 <body>
+    <script>
+        let Mensaje = "{{ Mensaje }}";
+            if  (Mensaje == "Comentario eliminado exitosamente")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Comentario eliminado exitosamente...para ver los cambios ingrese nuevamente");
+                 let Mensaje =""   
+             
+            }
+            else if  (Mensaje == "Comentario Guardado con exito")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Comentario Guardado con exito... para ver los cambios ingrese nuevamente");
+                 let Mensaje =""
+             
+            }
+            else if  (Mensaje == "Guardado con exito")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Imagen Guardada exitosamente... para ver los cambios ingrese nuevamente");
+                
+                 let Mensaje =""
+            }
+            else if  (Mensaje == "Actualizado con exito")  
+            {
+                // document.write("Contraseña errada")
+                 alert("Información actualizada con exito");
+                
+                 let Mensaje =""
+            }
+
+            
+            
+        </script>
+        
     <form action="/GuardarImagen" method="POST" enctype="multipart/form-data">
         <div id="sidebar">
             <div class="toggle-btn">
                 <span>&#9776;</span>
             </div>
-              <ul>
+            <ul>
                 <li>
                     <img class="img-logo" src="/static/img/logo.png" alt="">
                 </li>
@@ -28,11 +63,12 @@
                     <div class="file-select" id="src-file1">
                         <input type="file" name="Avatar2" aria-label="Archivo">
                     </div>
-                    <input type="submit" value="Cargar" name="update-profile" class="btn" style="background-color:#fff;">
+                    <input type="submit" value="Cargar imagen" name="update-profile" class="btn1">
+                    
 
-               </li> 
+                </li>
 
-                        
+
                 <!-- <li><a href="">Agregar Imagenes</a></li> -->
                 <li><a href="/infoPersonal">Información personal</a></li>
                 <li><a href="/logout">Cerrar Sesión</a></li>
@@ -44,17 +80,18 @@
 
 
 
-               </ul>
-            </div>
-       </form>
+            </ul>
+        </div>
+    </form>
     <nav>
         <!-- session['Carpeta'] -->
         <div class="img-logo2"><img src="/static/img/{{ session['Usuario'] }}/perfil/Default.png" alt="logo"></div>
         <div class="nav-items">
             <li><a href="/infoPersonal">{{ session["Alias"]}}</a></li>
         </div>
-        <form action="/Busqueda" method ="POST" class="Busqueda">
-            <input type="search" class="search-data" name="CampoBusqueda" placeholder="Buscar" required title="Busqueda de Usuarios">
+        <form action="/Busqueda" method="POST" class="Busqueda">
+            <input type="search" class="search-data" name="CampoBusqueda" placeholder="Buscar" required
+                title="Busqueda de Usuarios">
             <button type="submit" class="fas fa-search"></button>
 
         </form>
@@ -72,24 +109,24 @@
 
                 {% for e in Imagenes %}
                 <div class="mySlides fade">
-                    <div class="numbertext" data-comentario="{{e['Comentarios']}}">
-                        {{loop.index}}/ {{Imagenes|length}}
+                    <div class="numbertext" data-comentario="{{e['Comentarios']}}" data-nombre="{{e['NombreImagen']}}">
+                        {{loop.index}}/ {{Imagenes|length}} {{e['NombreImagen']}}
                     </div>
                     <img src="static/img/{{ session['Usuario'] }}/{{e['NombreImagen']}}"
                         style="width:95%;height: 200px;max-width: 100%;max-height: 200px;">
                     <!-- <div class="text"><input type="button" value="Eliminar"></div> -->
                 </div>
-                        
+
                 {% endfor %}
-                
+
 
                 <a class="prev" onclick="plusSlides(-1)">❮</a>
                 <a class="next" onclick="plusSlides(1)">❯</a>
-                
+
                 <div class="text">
                     <button class="btn eliminar" aria-placeholder="Eliminar">
                         <i class="fa fa-trash" aria-placeholder="Eliminar"></i>
-    
+
                     </button>
                 </div>
 
@@ -110,32 +147,44 @@
 
 
     <form action="/Comentar" method="post" class="formsComents">
-    <strong><p class="nav-comments letra">Ver Comentarios</p></strong>
+        <strong>
+            <p class="nav-comments letra">Ver Comentarios</p>
+        </strong>
     </form>
-   
+
     <div class="nav-comments">
-        
-            
+        <form action="/limpiarComents" method="post" class="formsComents">
+
             <textarea name="comment" rows=10 cols=60 id="comentario">
                 
 
             </textarea>
-           
-            <button  class="btn"><i class="fa fa-trash"title="Borrar"></i></button>
-            <button  id="myBtn"><i class="fa fa-comment" title="Comentar"></i></button>
-            
-            <div id="myModal" class="modal">
 
-                <!-- Modal content -->
-                <div class="modal-content">
-                  <span class="close"> &times;</span>
-                  <input class="campotexto" ariaMultiLine="True" type="text"  width="400px" >
-                  <button id="myBtn">Enviar</button>
-                </div>
-              
-              </div>
+
+            <button type="submit" class="btn"><i class="fa fa-trash" title="Borrar"></i></button>
+
+        </form>
         
+        <button  id="myBtn"><i class="fa fa-comment" title="Comentar"></i></button>
+
     </div>
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <form action="/EnviarComentario" method="POST">
+            
+        <div class="modal-content">
+            <textarea name="foto" rows=1 cols=1 id="nombre">
+                
+            </textarea>
+
+            <span class="close" >&times;</span>
+          <input class="campotexto" ariaMultiLine="True" type="text"  width="400px" name="Texto" >
+          <button type="submit" id="myBtn">Enviar </button>
+        </div>
+      
+      </div>
+    </form>
 
 
     <script>
@@ -165,21 +214,32 @@
             slides[slideIndex - 1].style.display = "block";
             dots[slideIndex - 1].className += " active";
             TraerComentario()
+            TraerNombre()
+
+
         }
         function TraerComentario() {
 
             for (n of document.querySelectorAll(".mySlides.fade")) {
                 if (n.style.display == "block") {
-                    if (n.querySelector("div").getAttribute("data-comentario")!='None')
-                        document.getElementById("comentario").innerHTML= n.querySelector("div").getAttribute("data-comentario");
-                    else
-                      document.getElementById("comentario").innerHTML="";  
+                    document.getElementById("comentario").innerHTML= n.querySelector("div").getAttribute("data-comentario")
                 }
             }
 
         }
 
-    </script>
+        function TraerNombre() {
+
+for (n of document.querySelectorAll(".mySlides.fade")) {
+    if (n.style.display == "block") {
+        document.getElementById("nombre").innerHTML= n.querySelector("div").getAttribute("data-nombre")
+    }
+}
+
+}
+
+</script>
+
 <style>
     body {font-family: Arial, Helvetica, sans-serif;}
     

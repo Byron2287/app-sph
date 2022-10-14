@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="D:\Documents\BYRON\PROGRAMACION MINTIC 2022\DESARROLLO DE SOFTWARE\SPRINTS\Proyecto 21-09-2022\Proyecto\venv"
+VIRTUAL_ENV="D:\Downloads\SPH12oct\SPH\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

@@ -1,12 +1,10 @@
 import hashlib
 import os
-from tkinter import *
-import tkinter.messagebox
 
 from flask import Flask, render_template, request,jsonify,redirect, url_for,session
 import json
 #importa libreria os
-from os import getcwd, system
+from os import getcwd
 import shutil
 from werkzeug.utils import secure_filename
 
@@ -18,7 +16,7 @@ app=Flask(__name__)
 app.secret_key = os.urandom(24)
 
 
-#variables globales
+#variables
 nombre =""
 apellido =""
 fecha =""
@@ -37,7 +35,10 @@ Imagen1 =""
 pathFileImage =getcwd()+"/static/img/"
 Imagenes=[]
 Imagen1Busqueda=[]
-nombreBuscado =""
+Mensaje=""
+actualizado=""
+
+
 #Endpoint
 
 @app.route("/") #Ruta principal en esta ruta carga la pagina de logueo
@@ -45,9 +46,10 @@ def home(): #Función manejadora
     return render_template("index.html") #Respuesta
 
 
-#en esta estaria la validación del usuario para inicio de sesión
+#en esta estaria la valiDACION DE L USUARIO
 @app.route("/login",methods=["POST"])
 def login():
+    session["Mensaje"]=""
     user = request.form["txtUsuario"]
     password = str(request.form["txtPassword"])
     #cifra la clave
@@ -137,21 +139,25 @@ def login():
 #crear ruta de registro
 @app.route("/main")
 def main():
-   return  render_template("main.html",Imagenes=Imagenes)
+    if "Usuario" in session:
+        return  render_template("main.html",Imagenes=Imagenes,Mensaje=session["Mensaje"])
+    return  redirect("/")    
 
            
 
 #crear ruta de registro
-@app.route("/Registro",methods=["POST"])
+@app.route("/Registro")
 def register():
-    Mensaje=""
-    return render_template("registro.html")
+    if "Mensaje" in session:
+        return render_template("registro.html",Mensaje=session["Mensaje"])
+    else :
+        return render_template("registro.html",Mensaje="")
+
 
 #crear ruta despues de registrar al usuario
 @app.route("/Ingresando",methods=["POST"])
 def Ingreso():
     #captura todos los datos en las variables
-    
     global nombre
     nombre =request.form["nombres"]
     apellido =request.form["apellidos"]
@@ -163,33 +169,45 @@ def Ingreso():
     user=request.form["correo"]
     password = request.form["contraseña"]
     #cifra la clave
-
     Clave =hashlib.sha256(password.encode())
     ClaveCifrada =Clave.hexdigest()
     perfil="Usuario"
     alias =str(request.form["Alias"])
-        #realiza consulta sql para saber si los datos son correctos    
+    #crea una consulta para saber si este usuario existe
+        #creo conexion a la base de datos para buscar el nombre que escribi
     with sqlite3.connect("BD/SPH.db") as con:
+        con.row_factory = sqlite3.Row
     # Crea un apuntador para manipular la BD
         cur = con.cursor()
-        #envia info restante a la tabla de info personal
-        cur.execute(" INSERT INTO PersonalInfo (Nombre,Apellido,edad,Email,Telefono,Genero,EstaCivil,FNacimiento)VALUES(?,?,?,?,?,?,?,?)",[nombre,apellido,edad,user,telefono,genero,estCivil,fecha])
-        con.commit()
-        cur.execute(" INSERT INTO Users (Email,Password,Alias,Perfil)VALUES(?,?,?,?)",[user,ClaveCifrada,alias,perfil])
-        con.commit()
-        Mensaje ="Ok"
-        #crea la carpeta para guardar las fotos
-        pathFileImage=getcwd()+"\\static\\img\\"+user
-        os.mkdir(pathFileImage)
-        pathFileImage=pathFileImage+"\\perfil"
-        os.mkdir(pathFileImage)
-        #guarda una foto por defecto
-        Origen =getcwd()+"\\Default.png"
-        destino =pathFileImage+"\\Default.png"
-        shutil.copy(Origen,destino)
-        
-    return render_template("registro.html",Mensaje =Mensaje)
+        cur.execute("SELECT * FROM Users WHERE Email = ?",[user])
+        row = cur.fetchone()
+        if row:
+            session["Mensaje"]="Usuario Ya existe"
 
+        else :
+                #realiza consulta sql para saber si los datos son correctos    
+            with sqlite3.connect("BD/SPH.db") as con:
+            # Crea un apuntador para manipular la BD
+                cur = con.cursor()
+                #envia info restante a la tabla de info personal
+                cur.execute(" INSERT INTO PersonalInfo (Nombre,Apellido,edad,Email,Telefono,Genero,EstaCivil,Alias)VALUES(?,?,?,?,?,?,?,?)",[nombre,apellido,edad,user,telefono,genero,estCivil,alias])
+                con.commit()
+                cur.execute(" INSERT INTO Users (Email,Password,Alias,Perfil)VALUES(?,?,?,?)",[user,ClaveCifrada,alias,perfil])
+                con.commit()
+
+                session["Mensaje"] ="Ok"
+                #crea la carpeta para guardar las fotos
+                pathFileImage=getcwd()+"\\static\\img\\"+user
+                os.mkdir(pathFileImage)
+                pathFileImage=pathFileImage+"\\perfil"
+                os.mkdir(pathFileImage)
+                #guarda una foto por defecto
+                Origen =getcwd()+"\\Default.png"
+                destino =pathFileImage+"\\Default.png"
+                shutil.copy(Origen,destino)
+
+                
+        return redirect("/Registro")
 
 
 
@@ -205,15 +223,12 @@ def Infopersonal():
 
         # Crea un apuntador para manipular la BD
         cur = con.cursor()                   
-        cur.execute("SELECT Nombre,Apellido,Edad,P.Email,Telefono,Genero,EstaCivil,FNacimiento,Alias,Perfil FROM PersonalInfo P JOIN Users U ON P.Email = U.Email WHERE P.Email = ?",[Carpeta])
+        cur.execute("SELECT * FROM PersonalInfo WHERE Email = ?",[Carpeta])
         row = cur.fetchall()
         
     #Crea la consulta sql para traer la info
-    return render_template("infopersonal.html",
-                            Carpeta=Carpeta,edad=str(row[0][2]),
-                            apellido=str(row[0][1]),usuario=str(row[0][8]),
-                            EstCivil=str(row[0][6]),nombreperfil =str(row[0][0]),
-                            genero =str(row[0][5]))
+    return render_template("infopersonal.html",Carpeta=Carpeta,edad=str(row[0][2]),apellido=str(row[0][1]),
+                            usuario=str(row[0][7]),EstCivil=str(row[0][6]),nombreperfil =str(row[0][0]),genero =str(row[0][5]))
 
 #crea ruta de actualizacion de info personal
 @app.route("/infoPersonal/actualizar", methods=["POST"])
@@ -231,9 +246,7 @@ def Actualizar():
 
         cur = con.cursor()
         #envia info restante a la tabla de info personal    
-        cur.execute(" UPDATE PersonalInfo SET Nombre = ?, Apellido= ?,Edad = ?, email= ?, Genero= ?, EstaCivil= ?  WHERE Email =?",[nombreAct,apellidoAct,edadAct,emailact,generoAct,estCivilAct,Carpeta])
-        con.commit()
-        cur.execute(" UPDATE Users SET email= ?,Alias = ?  WHERE Email =?",[emailact,AliasAct,Carpeta])
+        cur.execute(" UPDATE PersonalInfo SET Nombre = ?, Apellido= ?,Edad = ?, email= ?,Alias = ?, Genero= ?, EstaCivil= ?  WHERE Email =?",[nombreAct,apellidoAct,edadAct,emailact,AliasAct,generoAct,estCivilAct,Carpeta])
         con.commit()
     #valida si el usuario ingreso algun dato para actualizar la foto
             # Se obtiene la imagen
@@ -250,7 +263,8 @@ def Actualizar():
             ruta = pathFileImage + secure_filename(nom_archivo)
             #Guarda el archivo en disco duro
             foto.save(ruta)
-    return "Actualizado con exito" 
+    session["Mensaje"]="Actualizado con exito"        
+    return redirect ("/main") 
 
 
 
@@ -265,8 +279,9 @@ def logout():
 @app.route("/Busqueda", methods=["POST"])
 def Busqueda():
     #crea variable Global
+    
     global nombreBuscado
-    nombreBuscado=request.form["CampoBusqueda"]
+    nombreBuscado =request.form["CampoBusqueda"]
     session["nombreBuscado"]=nombreBuscado
     #creo conexion a la base de datos para buscar el nombre que escribi
     with sqlite3.connect("BD/SPH.db") as con:
@@ -284,11 +299,11 @@ def Busqueda():
             session[apellidoBusqueda]=apellidoBusqueda
             edadBusqueda=str(row[2])
             session[edadBusqueda]=edadBusqueda
-            #FNacimientoBusqueda=row["FNacimiento"]
+            AliasBusqueda=row["Alias"]
+            session["AliasBusqueda"]=AliasBusqueda
             EmailBusqueda=row["Email"]
             session["EmailBusqueda"]=EmailBusqueda
-            nombreBuscado=EmailBusqueda
-            print(nombreBuscado)
+
 
             #carga la informacion de la primera foto que tenga el usuario de Busqueda
             with sqlite3.connect("BD/SPH.db") as con:
@@ -304,10 +319,8 @@ def Busqueda():
                    Imagen1=""
                    #Si hay datos
                    if row:
-                     # print(str(row.count()))
                       global Imagen1Busqueda
-                      Imagen1Busqueda=row
-                                            
+                      Imagen1Busqueda=row   
                       #capatura la cantidad de fotos
                       Cantidad = 3
 
@@ -325,53 +338,20 @@ def Busqueda():
 
 
 #crear ruta de registro
-
 @app.route("/BusquedaOk")
 def BusquedaOk():
-   return   render_template("mainBusqueda.html",Imagen1Busqueda=Imagen1Busqueda)
+   return   render_template("mainBusqueda.html",Imagen1Busqueda=Imagen1Busqueda,actualizado=actualizado,Mensaje=session["Mensaje"])
+   
 
 
-#crea ruta de info personal
-@app.route("/infoPersonalBusqueda")
-def InfopersonalBusqueda():
-    with sqlite3.connect("BD/SPH.db") as con:
-
-    # Convierte el registro en un diccionario
-                
-        con.row_factory = sqlite3.Row
-
-        # Crea un apuntador para manipular la BD
-        cur = con.cursor()                   
-        cur.execute("SELECT * FROM PersonalInfo WHERE Email = ?",[nombreBuscado])
-        row = cur.fetchall()
-        print(nombreBuscado)
-        #crea sesiones para cargar
-        if row:
-            session["edadBuscado"]=str(row[0][2])
-            session["apellidoBuscado"]=str(row[0][1]) 
-            session["usuarioBuscado"]=str(row[0][7]) 
-            session["EstCivilBuscado"]=str(row[0][6]) 
-            session["nombreperfil"]=str(row[0][0]) 
-            session["generoBuscado"]=str(row[0][5]) 
-            session["emailBuscado"]=str(row[0][3]) 
- 
-        
-    #Crea la consulta sql para traer la info
-    return redirect("/infoPersonalBuscado")
-
-@app.route("/infoPersonalBuscado")
-def infoPersonalBuscado():
-       return render_template("infopersonalBusqueda.html")
-
-
-     
+      
 #ruta para buscar usuarios 
 @app.route("/GuardarImagen", methods=["POST"])
 def FotoCargar():
 
         foto2 = request.files["Avatar2"]
 
-        if  foto2:
+        if  foto2  :
             ruta=""
             pathFileImage=""
 
@@ -389,23 +369,63 @@ def FotoCargar():
                   #envia info restante a la tabla de info personal
                   cur.execute ("INSERT INTO Imagenes (Usuario,NombreImagen)VALUES(?,?)",[Carpeta,NombreFoto])
                   con.commit()
+                  session["Mensaje"]="Guardado con exito"
 
-            return "Guardado con exito"
-        mensaje = tkinter.messagebox.showinfo("Mensaje","Foto no guardada")    
-        return mensaje       
-   
+            return  redirect("/main")
+           
+        return redirect("/main")       
+
+
+       
+
+
+
+#crea ruta de info personal
+@app.route("/infoPersonalBusqueda")
+def InfopersonalBusqueda():
+    #resetea los mensajes
+    session["Mensaje"]=""
+    with sqlite3.connect("BD/SPH.db") as con:
+
+    # Convierte el registro en un diccionario
+                
+        con.row_factory = sqlite3.Row
+
+        # Crea un apuntador para manipular la BD
+        cur = con.cursor()                   
+        cur.execute("SELECT * FROM PersonalInfo WHERE Email = ?",[nombreBuscado])
+        row = cur.fetchall()
+        #crea sesiones para cargar
+        session["edadBuscado"]=str(row[0][2])
+        session["apellidoBuscado"]=str(row[0][1]) 
+        session["usuarioBuscado"]=str(row[0][7]) 
+        session["EstCivilBuscado"]=str(row[0][6]) 
+        session["nombreperfil"]=str(row[0][0]) 
+        session["generoBuscado"]=str(row[0][5]) 
+        session["emailBuscado"]=str(row[0][3]) 
+ 
+        
+    #Crea la consulta sql para traer la info
+    return redirect("/infoPersonalBuscado")
+
+@app.route("/infoPersonalBuscado")
+def infoPersonalBuscado():
+       return render_template("infopersonalBusqueda.html")
+
 
 @app.route("/limpiarComents", methods=["POST"])
 def limpiarComents():
+    comentario =request.form["comment"]
+    Limpiar=""
        #Crea conexion para actualizar todos los datos
     with sqlite3.connect("BD/SPH.db") as con:
 
         cur = con.cursor()
         #envia info restante a la tabla de info personal    
-        cur.execute(" UPDATE Imagenes SET Comentarios = '' WHERE Usuario = ? AND NombreImagen =?",[Carpeta,Imagen1])
+        cur.execute(" UPDATE Imagenes SET Comentarios = ? WHERE Usuario = ? AND Comentarios =?",[Limpiar,session["Usuario"],comentario])
         con.commit()
-        return "Comentarios eliminados exitosamente"
-
+        session["Mensaje"]="Comentario eliminado exitosamente"
+        return redirect("/main")
 #bloquea los usuarios
 @app.route("/BloquearUsuario")
 def BloquearUsuario():
@@ -425,54 +445,91 @@ def BloquearUsuario():
 
 @app.route("/Mensaje")
 def EnviarMensaje():
+        HistoricoRemitente=""
 
-    HistoricoRemitente=""
-    HistoricoDestinatario="" 
     #realiza consulta para traer info
-    with sqlite3.connect("BD/SPH.db") as con:
+        with sqlite3.connect("BD/SPH.db") as con:
 
             # Convierte el registro en un diccionario
                         
-        con.row_factory = sqlite3.Row
-
-            # Crea un apuntador para manipular la BD
-        cur = con.cursor()
-            #carga consulta para traer la info del usuario                   
-        cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[session["Usuario"],nombreBuscado])
-            
-        row = cur.fetchone()
-            #Si hay datos
-        if row:
-           HistoricoRemitente=row["Conte_Msg"]
-            #carga la info del destinatario
-        with sqlite3.connect("BD/SPH.db") as con:
-            # Convierte el registro en un diccionario
             con.row_factory = sqlite3.Row
 
-                # Crea un apuntador para manipular la BD
+            # Crea un apuntador para manipular la BD
             cur = con.cursor()
-                #carga consulta para traer la info del usuario                   
-            cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[nombreBuscado,session["Usuario"]])
-                
-            row = cur.fetchone()
-                #Si hay datos
+            #carga consulta para traer la info del usuario                   
+            cur.execute("SELECT * from MensajesPrivados WHERE Remitente= ? AND Destinatario= ? union ALL SELECT * from MensajesPrivados WHERE Remitente=? AND Destinatario=? ORDER BY date ASC",[session["Usuario"],nombreBuscado,nombreBuscado,session["Usuario"]])
+            
+            row = cur.fetchall()
+            #Si hay datos
             if row:
-                HistoricoDestinatario=row["Conte_Msg"]
-                    #realiza un split para enviar la info
-                    
-                      
-                #carga los datos de remitente y destinatario
-        HistoricoMensajes=HistoricoRemitente+"<br>"+HistoricoDestinatario
-        separador = "<br>"
-        Historico = HistoricoMensajes.split(separador)
-        return render_template("message.html",Historico=Historico)
-    return "No hay datos"    
+                HistoricoRemitente=row
+            
+
+        return render_template("message.html",Historico=HistoricoRemitente)
+
+
+
+
+            
+
 
 
 
 @app.route("/MensajesPrivado", methods=["POST"])
 def MensajesPrivado():
     EnviarMensaje = request.form["campotexto"]
+    if EnviarMensaje == "":
+        return redirect("/Mensaje")
+    else :
+
+
+
+        with sqlite3.connect("BD/SPH.db") as con:
+
+            # Convierte el registro en un diccionario
+                
+                con.row_factory = sqlite3.Row
+
+                # Crea un apuntador para manipular la BD
+                cur = con.cursor()                   
+                cur.execute("INSERT INTO MensajesPrivados (Remitente,Destinatario,Mensaje)VALUES(?,?,?)",[session["Usuario"],nombreBuscado,EnviarMensaje])
+                con.commit()
+
+                return redirect("/Mensaje")    
+
+
+
+           
+
+@app.route("/CambiarPerfil", methods=["POST"])
+def CambiarPerfil():
+    Perfil=request.form["Perfil"]
+    #actualiza el perfil que tenga el usuario por el que hay marcado
+    with sqlite3.connect("BD/SPH.db") as con:
+
+    # Convierte el registro en un diccionario
+                
+            con.row_factory = sqlite3.Row
+
+            # Crea un apuntador para manipular la BD
+            cur = con.cursor()                   
+            cur.execute("UPDATE Users SET Perfil = ? WHERE Email = ?",[Perfil,nombreBuscado])
+            con.commit()
+            session["actualizado"] ="ok"
+
+    return redirect("/BusquedaOk")    
+
+
+    return Perfil
+
+
+   
+
+@app.route("/EnviarComentario", methods=["POST"])
+def EnviarComentario():
+    Comentario = request.form["Texto"]
+    NombreFoto=request.form["foto"]
+    #Conecta con la base de datos para validar si trae comentarios
     with sqlite3.connect("BD/SPH.db") as con:
 
         # Convierte el registro en un diccionario
@@ -482,17 +539,13 @@ def MensajesPrivado():
         # Crea un apuntador para manipular la BD
         cur = con.cursor()
         #carga consulta para traer los mensajes privados del usuario                  
-        cur.execute("SELECT * FROM Mensajes WHERE Remitente = ? AND Destinatario =?",[session['Usuario'],nombreBuscado])
+        cur.execute("SELECT Comentarios FROM Imagenes WHERE Usuario = ? AND NombreImagen =?",[session["Usuario"],NombreFoto])
         
         row = cur.fetchone()
         #Si hay datos
-        if row:
-
-           #captura la info y actualiza lo existente con lo nuevo
-           Historico=row["Mensaje"]
-        #concatena un br para que queden los espacios
-           EnviarMensaje=Historico+"<br>"+session['Usuario']+"<br>"+EnviarMensaje
-            #procede a realizar un insert de el mensaje enviado
+        if row :
+           ComenHistorico=row[0]+"---"+session["Usuario"]+" "+Comentario
+                       #procede a realizar un insert de el mensaje enviado
            with sqlite3.connect("BD/SPH.db") as con:
 
             # Convierte el registro en un diccionario
@@ -501,20 +554,39 @@ def MensajesPrivado():
 
                 # Crea un apuntador para manipular la BD
                 cur = con.cursor()                   
-                cur.execute("UPDATE MensajesPrivados SET Mensaje = ? WHERE Remitente = ? AND Destinatario=?",[EnviarMensaje,session["Usuario"],nombreBuscado])
-                con.commit()
-
-                return redirect("/Mensaje")    
-
+                cur.execute("UPDATE Imagenes SET comentarios = ? WHERE Usuario = ? AND NombreImagen =?",[ComenHistorico,session["Usuario"],NombreFoto])
+                session["Mensaje"]="Comentario Guardado con exito"
+                return redirect("/main")    
 
 
-           
-        else :
-            #procede a realizar un insert de el mensaje enviado
+            #CAPTURA LO QUE HAYA Y LO CONCATENA CON LO NUEVO
 
+    return "NO HAY DATOS"      
+
+
+@app.route("/EnviarComentarioBusqueda", methods=["POST"])
+def EnviarComentarioBusqueda():
+    Comentario = request.form["Texto"]
+    NombreFoto=request.form["foto"]
+    #Conecta con la base de datos para validar si trae comentarios
+    with sqlite3.connect("BD/SPH.db") as con:
+
+        # Convierte el registro en un diccionario
+                    
+        con.row_factory = sqlite3.Row
+
+        # Crea un apuntador para manipular la BD
+        cur = con.cursor()
+        #carga consulta para traer los mensajes privados del usuario                  
+        cur.execute("SELECT Comentarios FROM Imagenes WHERE Usuario = ? AND NombreImagen =?",[session["nombreBuscado"],NombreFoto])
+        
+        row = cur.fetchone()
+        #Si hay datos
+        if row :
+            ComenHistorico=row[0]
+            ComenHistorico=ComenHistorico+"---"+session["Usuario"]+" "+Comentario
+                       #procede a realizar un insert de el mensaje enviado
             with sqlite3.connect("BD/SPH.db") as con:
-                #concatena un br para que queden los espacios
-                EnviarMensaje=session["Usuario"]+"<br>"+EnviarMensaje
 
             # Convierte el registro en un diccionario
                 
@@ -522,25 +594,44 @@ def MensajesPrivado():
 
                 # Crea un apuntador para manipular la BD
                 cur = con.cursor()                   
-                cur.execute("INSERT INTO Mensajes (Remitente,Destinatario,Mensaje)VALUES(?,?,?)",[session["Usuario"],nombreBuscado,EnviarMensaje])
-                con.commit()
-
-                return redirect("/Mensaje")    
-
-            
-            return "No hay Datos"
+                cur.execute("UPDATE Imagenes SET comentarios = ? WHERE Usuario = ? AND NombreImagen =?",[ComenHistorico,session["nombreBuscado"],NombreFoto])
+                session["Mensaje"]="Comentario Guardado con exito"
+                return redirect("/BusquedaOk")    
 
 
+            #CAPTURA LO QUE HAYA Y LO CONCATENA CON LO NUEVO
+        else :
+            ComenHistorico="---"+session["Usuario"]+" "+Comentario
+                       #procede a realizar un insert de el mensaje enviado
+            with sqlite3.connect("BD/SPH.db") as con:
+
+                # Convierte el registro en un diccionario
+                    
+                    con.row_factory = sqlite3.Row
+
+                    # Crea un apuntador para manipular la BD
+                    cur = con.cursor()                   
+                    cur.execute("UPDATE Imagenes SET comentarios = ? WHERE Usuario = ? AND NombreImagen =?",[ComenHistorico,session["nombreBuscado"],NombreFoto])
+                    session["Mensaje"]="Comentario Guardado con exito"
+                    return redirect("/BusquedaOk")    
+    
 
 
+
+@app.route("/producto/guardar", methods=["POST"])
+def productoSave():
+    nomProducto = request.form["nomProducto"]
+    preProducto = request.form["preProducto"]
+    canProducto = request.form["canProducto"]
+    return f"Producto {nomProducto}. Guardado con éxito"
 
 @app.route("/Main")
 def principal():
     if "Usuario" in session:
-        return render_template("main.html")
+        return render_template("main.html",Mensaje=session["Mensaje"])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
 
     
 

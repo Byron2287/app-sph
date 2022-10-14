@@ -112,6 +112,9 @@ nav .nav-items li a {
 nav .nav-items li a:hover {
     color: black;
 }
+nav .btnInfopersonal{
+
+}
 
 nav form{
     display: flex;
@@ -140,11 +143,11 @@ nav form button {
     border: none;
     cursor: pointer;
     font-size: 17px;
-    color:blue;
+    color: #fff;
     border-radius: 2px;
 }
 .Busqueda{
-    background:#263849;
+    background:#fff;
     color: #fff;
 }
 .Busqueda button{
@@ -206,103 +209,12 @@ nav form button {
     width: 90%;
   }
   
-  .navmensaje {
-    background:linear-gradient(91.9deg, rgb(93, 248, 219) 27.8%, rgb(33, 228, 246) 67%);
-    margin-left: 200px;
-    margin-top: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    height: 90px;
-    padding: 0 100px;
-    position: fixed;
-    width: 1500px;
-    background-color: #263849;
-}
-
-.campotextomensaje{
-    width: 850px;
-    height: 450px;
-    padding-top: 0px;
-    padding-right: 0px;
-    padding-left: 0px;
-    padding-bottom: 0px;
-    background: linear-gradient(91.9deg, rgb(93, 248, 219) 27.8%, rgb(33, 228, 246) 67%);
-    text-align:start ;
-    
-}
-
-
   /* The Close Button */
   .close {
     color: #aaaaaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-         }
-.file-select {
-    position: relative;
-    display: inline-block;
-}
-
-.file-select::before {
-    background-color: #263849;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 3px;
-    content: 'Seleccionar'; /* testo por defecto */
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-}
-
-.file-select input[type="file"] {
-    opacity: 0;
-    width: 200px;
-    height: 32px;
-    display: inline-block;
-}
-
-#src-file1::before {
-    content: 'Agregar Imagenes';
-}
+  }
   
- 
-
-
-
-.file-select {
-    position: relative;
-    display: inline-block;
-}
-
-.file-select::before {
-    background-color: #263849;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 3px;
-    content: 'Seleccionar'; /* testo por defecto */
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-}
-
-.file-select input[type="file"] {
-    opacity: 0;
-    width: 200px;
-    height: 32px;
-    display: inline-block;
-}
-
-#src-file1::before {
-    content: 'Agregar Imagenes';
-}
 
